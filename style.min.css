@@ -1,4 +1,4 @@
-/* --- Initial 终极重构：两栏对齐 + 表格支持 --- */
+/* --- Initial 终极重构：Flexbox 两栏对齐版 --- */
 
 :root {
     --bg-color: #ffffff;
@@ -6,7 +6,6 @@
     --border-color: #eeeeee;
     --header-bg: #ffffff;
     --code-bg: #f8f9fa;
-    --table-bg: #f6f8fa;
 }
 
 [data-theme="dark"] {
@@ -15,48 +14,44 @@
     --border-color: #30363d;
     --header-bg: #161b22;
     --code-bg: #0d1117;
-    --table-bg: #161b22;
 }
 
-/* 1. 核心布局：实现 2 图的两栏效果 */
-body { background: var(--bg-color) !important; color: var(--text-color) !important; transition: 0.3s; line-height: 1.8; }
-.container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; }
+/* 1. 核心布局重构：利用 Flexbox 实现 2 图对齐 */
+body { 
+    background: var(--bg-color) !important; 
+    color: var(--text-color) !important; 
+    transition: 0.3s; 
+    line-height: 1.8; 
+}
 
-/* 清除浮动，防止排版坍塌 */
-.clearfix::after { content: ""; display: table; clear: both; }
+/* 关键：强制主容器使用 Flex 布局 */
+#body .container.clearfix {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap; /* 兼容手机端自动换行 */
+}
 
+/* 强制主内容区和侧边栏水平排列 */
+#main {
+    width: 70% !important; /* 给右侧留出 30% 空间 */
+    margin: 0 !important;
+    float: none !important; /* 清除旧的浮动干扰 */
+}
+
+#secondary {
+    width: 25% !important;
+    margin: 0 !important;
+    float: none !important;
+    padding-top: 52px; /* 实地微调：让右侧“最新文章”与左侧标题物理平行 */
+}
+
+/* 2. 板头修复：导航栏横排 */
 #header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); padding: 20px 0; }
-.site-name { float: left; } 
-#nav { float: right; }
+.nav-menu { float: right; margin: 0; }
 .nav-menu li { display: inline-block !important; margin-left: 20px; }
 
-/* 2. 主体对齐：让侧边栏与文章标题平行 */
-#body { padding-top: 40px; }
-#main { 
-    float: left; 
-    width: 72%; /* 文章区域宽度 */
-}
-#secondary { 
-    float: right; 
-    width: 25%; /* 侧边栏区域宽度 */
-}
-
-/* 3. 表格支持：美化并适配黑夜模式 */
-.post-content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 14px;
-}
-.post-content table th, .post-content table td {
-    border: 1px solid var(--border-color);
-    padding: 10px;
-    text-align: left;
-}
-.post-content table th { background: var(--table-bg); }
-.post-content table tr:nth-child(even) { background: rgba(0,0,0,0.02); }
-
-/* 4. 代码块：MacOS 风格 */
+/* 3. 代码块：MacOS 终端风格 */
 pre {
     background: var(--code-bg) !important;
     padding: 40px 15px 15px !important;
@@ -64,12 +59,15 @@ pre {
     border: 1px solid var(--border-color);
     position: relative;
     overflow-x: auto;
+    margin: 20px 0;
 }
 pre::before {
     content: ""; position: absolute; top: 15px; left: 15px; width: 8px; height: 8px;
     border-radius: 50%; background: #ff5f56; box-shadow: 18px 0 0 #ffbd2e, 36px 0 0 #27c93f;
 }
 
-/* 隐藏干扰元素 */
+/* 4. 表格与去图化 */
+.post-content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+.post-content table th, .post-content table td { border: 1px solid var(--border-color); padding: 10px; }
 .avatar, #site-search, .post-near { display: none !important; }
-#footer { clear: both; padding: 50px 0; border-top: 1px solid var(--border-color); text-align: center; color: #888; }
+#footer { clear: both; padding: 40px 0; text-align: center; color: #888; border-top: 1px solid var(--border-color); }
