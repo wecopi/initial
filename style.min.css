@@ -1,105 +1,88 @@
-/* --- Initial 极客定制版：找回原版结构 + 终端美感 --- */
+/* --- Initial 2026 终极重构版：支持表格 + 两栏布局 --- */
 
-/* 1. 核心变量：管理白天黑夜颜色 */
 :root {
     --bg-color: #ffffff;
     --text-color: #333333;
-    --header-bg: #fdfdfd;
-    --border-color: #eeeeee;
-    --code-bg: #f6f8fa;
-    --primary-blue: #448aff;
+    --header-bg: #ffffff;
+    --border-color: #e1e4e8;
+    --code-bg: #f8f9fa;
+    --table-header: #f6f8fa;
+    --table-row-hover: #fbfbfb;
 }
 
 [data-theme="dark"] {
-    --bg-color: #1a1a1a;
-    --text-color: #cfd8dc;
-    --header-bg: #222222;
-    --border-color: #333333;
+    --bg-color: #0d1117; /* 采用更深的 GitHub 黑 */
+    --text-color: #c9d1d9;
+    --header-bg: #161b22;
+    --border-color: #30363d;
     --code-bg: #0d1117;
-    --primary-blue: #58a6ff;
+    --table-header: #161b22;
+    --table-row-hover: #1f242c;
 }
 
-/* 2. 基础布局：恢复原版呼吸感 */
-body {
-    background-color: var(--bg-color) !important;
-    color: var(--text-color) !important;
-    font-family: -apple-system, sans-serif;
-    line-height: 1.8;
-    transition: background 0.3s;
+/* 1. 基础架构修复：解决 1 图垂直堆叠问题 */
+body { background: var(--bg-color) !important; color: var(--text-color) !important; font-family: -apple-system, sans-serif; line-height: 1.8; transition: 0.3s; }
+.container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 15px; }
+.clearfix::after { content: ""; display: table; clear: both; }
+
+/* 2. 板头 (Header)：恢复横向导航 */
+#header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); padding: 25px 0; position: sticky; top: 0; z-index: 99; }
+.site-name { float: left; width: 30%; }
+#nav { float: right; width: 70%; text-align: right; }
+.nav-menu li { display: inline-block !important; margin-left: 25px; }
+.nav-menu a { color: var(--text-color) !important; font-weight: 500; text-decoration: none; }
+
+/* 3. 主体两栏布局：还原 2 图核心结构 */
+#main { float: left; width: 70%; padding: 30px 0; }
+#secondary { float: right; width: 25%; padding: 30px 0; }
+
+/* 4. 表格功能重构：实地解决黑夜模式显示问题 */
+.post-content table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    overflow-x: auto;
+    display: block; /* 移动端支持横向滚动 */
 }
 
-.container {
-    max-width: 960px !important;
-    margin: 0 auto;
+.post-content table th {
+    background-color: var(--table-header);
+    font-weight: 600;
+    border: 1px solid var(--border-color);
+    padding: 10px 15px;
+    text-align: left;
 }
 
-/* 3. 板头 (Header)：实地修复导航栏散乱问题 */
-#header {
-    background: var(--header-bg) !important;
-    border-bottom: 1px solid var(--border-color) !important;
-    padding: 20px 0 !important;
-    margin-bottom: 30px;
+.post-content table td {
+    border: 1px solid var(--border-color);
+    padding: 10px 15px;
+    font-size: 14px;
 }
 
-.site-title {
-    float: left; /* 标题居左 */
-    margin: 0;
-    font-size: 24px;
+.post-content table tr:nth-child(2n) {
+    background-color: var(--table-header); /* 隔行换色 */
 }
 
-#nav {
-    float: right; /* 导航居右 */
+.post-content table tr:hover {
+    background-color: var(--table-row-hover); /* 鼠标悬停变色 */
 }
 
-.nav-menu {
-    list-style: none !important;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-menu li {
-    display: inline-block !important; /* 实地修复：变回横排 */
-    margin-left: 20px !important;
-}
-
-.nav-menu a {
-    color: var(--text-color) !important;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-/* 4. 代码块：MacOS 终端风格 (image_b58cc8 同款) */
+/* 5. 代码块：MacOS 圆点样式 */
 pre {
     background-color: var(--code-bg) !important;
-    padding: 45px 20px 15px 20px !important;
-    border-radius: 12px !important;
-    border: 1px solid var(--border-color) !important;
+    padding: 45px 15px 15px 15px !important;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
     position: relative;
     overflow-x: auto;
-    margin: 25px 0 !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin: 25px 0;
 }
-
 pre::before {
-    content: "";
-    position: absolute;
-    top: 18px;
-    left: 18px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #ff5f56;
-    box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f; /* 红黄绿三色 */
+    content: ""; position: absolute; top: 18px; left: 18px; width: 10px; height: 10px;
+    border-radius: 50%; background: #ff5f56; box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
 }
 
-/* 5. 板尾 (Footer) 与其它杂项 */
-#footer {
-    padding: 40px 0 !important;
-    border-top: 1px solid var(--border-color) !important;
-    text-align: center;
-    font-size: 13px;
-    color: #999;
-}
-
-/* 隐藏不想要的干扰项 */
-.avatar, .post-near, #site-search { display: none !important; }
+/* 6. 去图化与板尾 */
+#footer { clear: both; padding: 40px 0; text-align: center; border-top: 1px solid var(--border-color); color: #888; }
+.avatar, #site-search, .post-near { display: none !important; }
