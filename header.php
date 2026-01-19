@@ -15,6 +15,16 @@
 'date'      =>  _t('在 %s 发布的文章'),
 'author'    =>  _t('作者 %s 发布的文章')
 ), '', ' - '); ?><?php $this->options->title(); if ($this->is('index') && $this->options->subTitle): ?> - <?php $this->options->subTitle(); endif; ?></title>
+
+<script>
+    (function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    })();
+</script>
+
 <?php $this->header('generator=&template=&pingback=&xmlrpc=&wlw=&commentReply=&rss1=&rss2=&antiSpam=&atom='); ?>
 <link rel="stylesheet" href="<?php cjUrl('style.min.css') ?>" />
 <?php if ($this->options->CustomCSS): ?>
@@ -22,9 +32,6 @@
 <?php endif; ?>
 </head>
 <body class="<?php if ($this->options->OneCOL): ?>one-col<?php else: ?>bd<?php endif; if ($this->options->HeadFixed): ?> head-fixed<?php endif; ?>">
-<!--[if lt IE 9]>
-<div class="browsehappy">当前网页可能 <strong>不支持</strong> 您正在使用的浏览器. 为了正常的访问, 请 <a href="https://browsehappy.com/">升级您的浏览器</a>.</div>
-<![endif]-->
 <header id="header">
 <div class="container clearfix">
 <div class="site-name">
@@ -36,8 +43,7 @@
 <script>function Navswith(){document.getElementById("header").classList.toggle("on")}</script>
 <button id="nav-swith" onclick="Navswith()"><span></span></button>
 <div id="nav">
-<div id="site-search">
-<form id="search" method="post" action="<?php $this->options->siteUrl(); ?>">
+<div id="site-search" style="display:none;"> <form id="search" method="post" action="<?php $this->options->siteUrl(); ?>">
 <input type="text" id="s" name="s" class="text" placeholder="输入关键字搜索" required />
 <button type="submit"></button>
 </form>
@@ -94,10 +100,29 @@ if (in_array('AggPage', $this->options->Navset)): ?>
 </li>
 <?php endif;
 endif; ?>
+
+<li class="menu-item" style="list-style:none; display:inline-block; margin-left:15px;">
+    <a id="theme-toggle" style="cursor:pointer; font-weight:bold;">🌓 模式</a>
+</li>
 </ul>
 </div>
 </div>
 </header>
+
+<script>
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        const root = document.documentElement;
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+            root.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+        } else {
+            root.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        }
+    });
+</script>
+
 <div id="body"<?php if ($this->options->PjaxOption): ?> in-pjax<?php endif; ?>>
 <div class="container clearfix">
 <div id="main">
